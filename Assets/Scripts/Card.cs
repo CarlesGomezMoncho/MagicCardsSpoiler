@@ -2,6 +2,7 @@
 public class Card
 {
     public int id;
+    public int cardNum;
     public string name;
     public int set;
     public string image;
@@ -10,9 +11,10 @@ public class Card
     public string rarity;
     public string date;
 
-    public Card(int id, string name, string image, int set, string type, string color, string rarity, string date)
+    public Card(int id, int cardNum, string name, string image, int set, string type, string color, string rarity, string date)
     {
         this.id = id;
+        this.cardNum = cardNum;
         this.name = name;
         this.image = image;
         this.set = set;
@@ -25,6 +27,6 @@ public class Card
     override
     public string ToString()
     {
-        return "id: " + id + "  name: " + name + "  image: " + image + "  set: " + set + "  type: " + type + "  color: " + color + "  rarity: " + rarity + "  date: " + date;
+        return "id: " + id + "num: " + cardNum + "  name: " + name + "  image: " + image + "  set: " + set + "  type: " + type + "  color: " + color + "  rarity: " + rarity + "  date: " + date;
     }
 }

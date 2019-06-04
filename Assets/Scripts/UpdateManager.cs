@@ -7,10 +7,11 @@ using UnityEngine.Networking;
 public class UpdateManager: MonoBehaviour
 {
 
-    public string urlVersion = "http://stiwi.com/magicSpoilers/Version.txt";
-    public string cardsUrl = "http://stiwi.com/magicSpoilers/Cards.csv";
-    public string setsUrl = "http://stiwi.com/magicSpoilers/Sets.csv";
+    public string urlVersion = "http://stiwi.com/magicSpoilers/version.txt";
+    public string cardsUrl = "http://stiwi.com/magicSpoilers/cards.csv";
+    public string setsUrl = "http://stiwi.com/magicSpoilers/sets.csv";
     public string imgUrl = "http://stiwi.com/magicSpoilers/img/";
+    public string assetsUrl = "http://stiwi.com/magicSpoilers/assets/";
 
     public GameObject updateAvailiableNotification;
     public GameObject checkUpdateNotification;
@@ -23,6 +24,7 @@ public class UpdateManager: MonoBehaviour
 
     private bool setsUpdated = false;
     private bool cardsUpdated = false;
+    private bool assetsUpdated = false;
 
     private void Start()
     {
@@ -42,7 +44,7 @@ public class UpdateManager: MonoBehaviour
         }
 
         //si s'està actualitzant la bd i ja s'ha acabat
-        if (setsUpdated && cardsUpdated && updatingNotification.GetComponent<CanvasGroup>().alpha == 1)
+        if (setsUpdated && cardsUpdated && assetsUpdated && updatingNotification.GetComponent<CanvasGroup>().alpha == 1)
         {
             updatingNotification.GetComponent<Animator>().Play("Fade-out");
             updateCompletedNotification.GetComponent<Animator>().Play("Fade-in");
@@ -96,6 +98,7 @@ public class UpdateManager: MonoBehaviour
                         //posem a fals que les taules estan actualitzades
                         cardsUpdated = false;
                         setsUpdated = false;
+                        assetsUpdated = false;
                     }
                     else
                     {
@@ -116,9 +119,15 @@ public class UpdateManager: MonoBehaviour
     public void UpdateDB()
     {
         updatingNotification.GetComponent<Animator>().Play("Fade-in");
-        StartCoroutine(GetRequestSets(setsUrl));
+        StartCoroutine(UpdateCoroutines());
+    }
+
+    private IEnumerator UpdateCoroutines()
+    {
         StartCoroutine(GetRequestCards(cardsUrl));
-        //SetCurrentVersionDB(onlineVersion);
+        yield return StartCoroutine(GetRequestSets(setsUrl));//espera a que estiga la llista de sets, per que els assets la necesita
+        StartCoroutine(GetRequestAssets(assetsUrl));
+        //SetCurrentVersionDB(onlineVersion);   //COMENTAT PER A QUE SEMPRE ACTUALITZE, QUAN DEIXEM DE FER PROVES S'HA DE DESCOMENTAR, PER A QUE SI JA ESTÀ ACTUALITZAT, NO FASA RES MES
     }
 
     private int GetCurrentVersionDB()
@@ -129,6 +138,7 @@ public class UpdateManager: MonoBehaviour
     private void SetCurrentVersionDB(int versio)
     {
         PlayerPrefs.SetInt("version", versio);
+        PlayerPrefs.Save();     //NO ESTIC SEGUR SI SE FA EN ALGUN ALTRE LLOC O QUE, SIMPLEMENT HE VIST QUE ACI NO ES FEIA I HO HE POSAT, IGUAL ESTA MAL
     }
 
     //esta funció segurament s'haurà de borrar
@@ -138,6 +148,8 @@ public class UpdateManager: MonoBehaviour
         //StartCoroutine(GetRequestCards(cardsUrl));
     }*/
 
+
+    //CREC QUE ESTA FUNCIÓ NO ES GASTA, JA QUE SE FA PER ASSETBUNDLE
     IEnumerator GetTexture(Card card)
     //public void GetTexture(Card card)
     {
@@ -225,7 +237,7 @@ public class UpdateManager: MonoBehaviour
                         entries[i] = entries[i].Trim('"');
                     }
 
-                    //si s'ha pogut separar (hi han 8 paràmetres per a la carta)
+                    //si s'ha pogut separar (hi han 4 paràmetres per al set)
                     if (entries.Length == 4)
                     {
                         //els id i set son enters, si fallen se posen a 0
@@ -305,16 +317,18 @@ public class UpdateManager: MonoBehaviour
                     }
                     
                     //si s'ha pogut separar (hi han 8 paràmetres per a la carta)
-                    if (entries.Length == 8)
+                    if (entries.Length == 9)
                     {
                         //els id i set son enters, si fallen se posen a 0
                         int.TryParse(entries[0], out int id);
-                        int.TryParse(entries[3], out int set);
+                        int.TryParse(entries[1], out int cardNum);
+                        int.TryParse(entries[4], out int set);
 
                         //cada entrada correspon a un parametre del objecte
-                        Card newCard = new Card(id, entries[1], entries[2], set, entries[4], entries[5], entries[6], entries[7]);
-                        StartCoroutine(GetTexture(newCard));
-                        Debug.Log(newCard.ToString());
+                        Card newCard = new Card(id, cardNum, entries[2], entries[3], set, entries[5], entries[6], entries[7], entries[8]);
+                        //StartCoroutine(GetTexture(newCard));  //HE COMENTAT LA CRIDÀ HA ESTA FUNCIÓ, AÇÒ NO ES GASTA?
+                        //Debug.Log(newCard.ToString());
+                        
                         //si podem afegir el set
                         if (CardController.instance.AddCard(newCard))
                         {
@@ -332,6 +346,40 @@ public class UpdateManager: MonoBehaviour
                 cardsUpdated = true;
             }
         }
+    }
+
+    IEnumerator GetRequestAssets(string uri)
+    {
+        //creem dir primer si no existeix
+        if (!Directory.Exists(Application.persistentDataPath + "/assetBundles/"))
+        {
+            Directory.CreateDirectory(Application.persistentDataPath + "/assetBundles/");
+        }
+
+        foreach (Set s in SetController.instance.GetSets())
+        {
+            string fullurl = uri + s.shortname.ToLower();
+            Debug.Log("ruta online: " + fullurl);
+            using (UnityWebRequest webRequest = UnityWebRequest.Get(fullurl))
+            {
+                // Request and wait for the desired page.
+                yield return webRequest.SendWebRequest();
+
+                if (webRequest.isNetworkError)
+                {
+                    Debug.Log(": Error: " + webRequest.error);
+                }
+                else
+                {
+                    Debug.Log("Received: " + webRequest.downloadHandler.text);
+
+                    string fullPath = Application.persistentDataPath + "/assetBundles/" + s.shortname.ToLower();
+                    File.WriteAllBytes(fullPath, webRequest.downloadHandler.data);
+                }
+            }
+        }
+
+        assetsUpdated = true;
     }
 
     /*private IEnumerator downloadFile()

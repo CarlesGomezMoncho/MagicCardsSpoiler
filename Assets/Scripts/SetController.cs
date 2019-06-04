@@ -100,6 +100,11 @@ public class SetController : MonoBehaviour
         return tblSets.GetSet(id);
     }
 
+    public List<Set> GetSets()
+    {
+        return tblSets.GetSets();
+    }
+
     public void EmptyTable()
     {
         tblSets.DeleteAllData();

@@ -1,0 +1,45 @@
+ManifestFileVersion: 0
+CRC: 4291242465
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 66181e0a3911489a9e166009d4f86afe
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: ea5a42e0fd8ea905efa7aa926a3b8944
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/images/war/en_pdYiox6lHp.png
+- Assets/images/war/en_8W28ewOIYR.png
+- Assets/images/war/en_fipIynEv9T.png
+- Assets/images/war/en_403EwLBk2r.png
+- Assets/images/war/en_QAhIHkb6sJ.png
+- Assets/images/war/en_07httIRH2b.png
+- Assets/images/war/en_o7UDMeUpng.png
+- Assets/images/war/en_1jGH2EQuSs.png
+- Assets/images/war/en_bs9pdVJN9t.png
+- Assets/images/war/en_YSFqSujXAk.png
+- Assets/images/war/en_60lO144FqP.png
+- Assets/images/war/en_IGwfkIPL6t.png
+- Assets/images/war/en_olgeHYbTo4.png
+- Assets/images/war/en_1oOV7C8BIt.png
+- Assets/images/war/en_rvC4Q2d699.png
+- Assets/images/war/en_Fg9d2TtkZi.png
+- Assets/images/war/en_fThx1H40Hw.png
+- Assets/images/war/en_0oYpSG3sxl.png
+- Assets/images/war/en_ChdbycczAl.png
+- Assets/images/war/en_tOhdvnOA2C.png
+- Assets/images/war/en_xhhae1XAxy.png
+- Assets/images/war/en_XGbUZxpEtT.png
+- Assets/images/war/en_N4Q4wE6e84.png
+- Assets/images/war/en_TIC6XeFB9Z.png
+- Assets/images/war/en_6ewc03ehdY.png
+- Assets/images/war/en_RI1OiiW86r.png
+- Assets/images/war/en_Qt6QAHJ72a.png
+- Assets/images/war/en_BVai84lnRo.png
+Dependencies: []

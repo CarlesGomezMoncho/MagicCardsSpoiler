@@ -1,0 +1,21 @@
+ManifestFileVersion: 0
+CRC: 1871457665
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 7bfa88850a65fd3358bb6aa0aaa56693
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: ea5a42e0fd8ea905efa7aa926a3b8944
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/images/war/en_60lO144FqP.png
+- Assets/images/war/en_IGwfkIPL6t.png
+- Assets/images/war/en_Qt6QAHJ72a.png
+- Assets/images/war/en_BVai84lnRo.png
+Dependencies: []

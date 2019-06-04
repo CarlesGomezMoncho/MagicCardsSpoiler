@@ -1,0 +1,10 @@
+ManifestFileVersion: 0
+CRC: 2734664876
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: war
+      Dependencies: {}
+    Info_1:
+      Name: rix
+      Dependencies: {}

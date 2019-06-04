@@ -10,6 +10,7 @@ public class TblCards : DBHelper
     private const string TABLE_NAME = "Cards";
 
     private const string KEY_ID = "id";
+    private const string KEY_CARD_NUM = "cardNum";
     private const string KEY_NAME = "name";
     private const string KEY_IMAGE = "image";
     private const string KEY_ID_SET = "id_set"; 
@@ -26,6 +27,7 @@ public class TblCards : DBHelper
 
         dbcmd.CommandText = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " ( " +
             KEY_ID + " INTEGER NOT NULL PRIMARY KEY UNIQUE, " +
+            KEY_CARD_NUM + " INTEGER NOT NULL, " +
             KEY_NAME + " TEXT NOT NULL, " +
             KEY_IMAGE + " TEXT NOT NULL, " +
             KEY_ID_SET + " INTEGER NOT NULL, " +
@@ -43,13 +45,18 @@ public class TblCards : DBHelper
     {
         IDbCommand dbcmd = GetDbCommand();
 
-        dbcmd.CommandText = "INSERT INTO " + TABLE_NAME + " (" + KEY_ID + ", " + KEY_NAME + ", " + KEY_IMAGE + ", " + KEY_ID_SET + ", " + KEY_TYPE + ", " + KEY_COLOR+ ", " + KEY_RARITY + ", " + KEY_DATE +
-            ") VALUES (@id,@name,@image,@id_set,@type,@color,@rarity,@date)";
+        dbcmd.CommandText = "INSERT INTO " + TABLE_NAME + " (" + KEY_ID + ", " + KEY_CARD_NUM + ", " + KEY_NAME + ", " + KEY_IMAGE + ", " + KEY_ID_SET + ", " + KEY_TYPE + ", " + KEY_COLOR+ ", " + KEY_RARITY + ", " + KEY_DATE +
+            ") VALUES (@id,@card_num,@name,@image,@id_set,@type,@color,@rarity,@date)";
 
         IDbDataParameter id = dbcmd.CreateParameter();
         id.ParameterName = "@id";
         id.Value = card.id;
         dbcmd.Parameters.Add(id);
+
+        IDbDataParameter cardNum = dbcmd.CreateParameter();
+        cardNum.ParameterName = "@card_num";
+        cardNum.Value = card.cardNum;
+        dbcmd.Parameters.Add(cardNum);
 
         IDbDataParameter name = dbcmd.CreateParameter();
         name.ParameterName = "@name";
@@ -107,15 +114,16 @@ public class TblCards : DBHelper
             }
 
             int id = int.Parse(fila[0].ToString());
-            string name = fila[1].ToString();
-            string image = fila[2].ToString();
-            int id_set = int.Parse(fila[3].ToString());
-            string type = fila[4].ToString();
-            string color = fila[5].ToString();
-            string rarity = fila[6].ToString();
-            string date = fila[7].ToString();
+            int card_num = int.Parse(fila[1].ToString());
+            string name = fila[2].ToString();
+            string image = fila[3].ToString();
+            int id_set = int.Parse(fila[4].ToString());
+            string type = fila[5].ToString();
+            string color = fila[6].ToString();
+            string rarity = fila[7].ToString();
+            string date = fila[8].ToString();
 
-            Card c = new Card(id, name, image, id_set, type, color, rarity, date);
+            Card c = new Card(id, card_num, name, image, id_set, type, color, rarity, date);
             cardsConsulta.Add(c);
         }
 
