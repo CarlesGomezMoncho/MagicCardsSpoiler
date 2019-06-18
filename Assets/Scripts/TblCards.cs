@@ -143,7 +143,25 @@ public class TblCards : DBHelper
     /// <returns></returns>
     public List<Card> GetCards()
     {
-        return GetCardsList("SELECT * FROM " + TABLE_NAME);
+        string sets = " ";
+
+        //per cada set, comprovem si està actiu o no en playerprefs
+        foreach (Set set in SetController.instance.GetSets())
+        {
+            if (PlayerPrefs.GetInt(Globals.Instance.SET + set.id + Globals.Instance.ACTIVE, 1) == 1)
+            {
+                sets += set.id + ",";
+            }
+        }
+
+        //afegim el set 0 (que deuria de estar buit) per a que no es quede el string en una coma final
+        sets += "0";
+
+
+        string query = "SELECT * FROM " + TABLE_NAME + " WHERE " + KEY_ID_SET + " IN (" + sets + ")";
+
+
+        return GetCardsList(query);
     }
 
     /// <summary>
